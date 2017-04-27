@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import SearchBar from './components/search_bar';
@@ -18,31 +19,37 @@ class App extends Component {
             selectedVideo: null
         };
 
+        // Life is hard, so ist javascript and React. we need some motivation to start with. Go ahead and by default listen some weird motivation videos :P
+        this.videoSearch('motivation');
+    }
+
+    // searching video on term
+    videoSearch(term) {
         YTSearch({
             key: API_KEY,
-            term: 'football'
+            term: term
         }, (videos) => {
-            this.setState({
-                videos: videos, 
-                selectedVideo: videos[0]
-            });
+            this.setState({videos: videos, selectedVideo: videos[0]});
         });
         // this.setState({videos: videos})
     }
 
+    // passing the videosearch on term change
     render() {
+        // Throttling the search term witn debounce method from loadsh,
+        const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300);
         return (
-            <div>
-                <SearchBar/>
-                <VideoDetail video={this.state.selectedVideo}/>
-                <VideoList 
-                    onVideoSelect={selectedVideo => this.setState({selectedVideo})}
-                    videos={this.state.videos}/>
+        <div> 
+            <SearchBar onSearchTermChange={term => this.videoSearch(term)}/> 
+            <VideoDetail video = { this.state.selectedVideo } /> 
+            <VideoList 
+                onVideoSelect = { selectedVideo => this.setState({selectedVideo})}
+                videos = { this.state.videos } /> 
             </div>
         );
     }
 }
 
 // Take this component's generated HTML and put it in to the DOM
-ReactDOM.render(
-    <App/>, document.querySelector('.container'));
+ReactDOM.render( <
+    App / >, document.querySelector('.container'));

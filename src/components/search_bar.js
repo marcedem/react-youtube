@@ -8,7 +8,7 @@ class searchBar extends Component {
 
         // Initialiazing a state
         this.state = {
-            term: 'Search ... '
+            term: ''
         };
     }
 
@@ -22,13 +22,15 @@ class searchBar extends Component {
             <div className="search-bar">
                 <input 
                 value={this.state.term}
-                onChange={event => this.setState({term: event.target.value})}/>
+                onChange={event => this.onInputChange(event.target.value)}/>
             </div>
         );
     }
 
-    onInputChange(event) {
+    onInputChange(term) {
         //  console.log(event.target.value);
+        this.setState({term});
+        this.props.onSearchTermChange(term);
     }
 
 }
